@@ -1,4 +1,8 @@
+import 'dart:developer';
+
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:meal/screen/auth/signupscreen.dart';
 
 class LogInScreen extends StatefulWidget {
@@ -21,6 +25,21 @@ class _LogInScreenState extends State<LogInScreen> {
   @override
   Widget build(BuildContext context) {
     final GlobalKey<FormState> key = GlobalKey<FormState>();
+
+    Future<void> submit() async {
+      try {
+        final firebaseauth = FirebaseAuth.instance;
+        final valied = key.currentState!.validate();
+        if (!valied) return;
+        firebaseauth.signInWithEmailAndPassword(
+          email: emailController.text,
+          password: passWordController.text,
+        );
+      } on FirebaseAuthException catch (e) {
+        log(e.code);
+      }
+    }
+
     final bool isLandscape =
         MediaQuery.of(context).orientation == Orientation.landscape;
 
@@ -45,7 +64,7 @@ class _LogInScreenState extends State<LogInScreen> {
           const Text('Log in', style: TextStyle(fontSize: 16)),
           const SizedBox(height: 40),
 
-          Container(
+          SizedBox(
             width: 266.47,
             height: 198.58,
             child: Image.asset('assets/image/Group11.png', fit: BoxFit.cover),
@@ -115,7 +134,7 @@ class _LogInScreenState extends State<LogInScreen> {
                       ),
                       const SizedBox(height: 12),
                       ElevatedButton(
-                        onPressed: () {},
+                        onPressed: submit,
                         style: ElevatedButton.styleFrom(
                           backgroundColor: const Color(0xff64C3BF),
                           padding: const EdgeInsets.symmetric(
@@ -161,7 +180,7 @@ class _LogInScreenState extends State<LogInScreen> {
                     Expanded(child: Divider()),
                   ],
                 ),
-                SizedBox(height: 8),
+                const SizedBox(height: 8),
                 ElevatedButton(
                   onPressed: () {},
                   style: ElevatedButton.styleFrom(
@@ -188,6 +207,11 @@ class _LogInScreenState extends State<LogInScreen> {
                   children: [
                     const Text('Don’t Have Account?'),
                     TextButton(
+                      style: TextButton.styleFrom(
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                      ),
                       onPressed: () {
                         Navigator.of(context).pushReplacement(
                           MaterialPageRoute(
@@ -224,9 +248,9 @@ Widget getbutton() {
     style: TextButton.styleFrom(
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
     ),
-    child: const Text(
+    child: Text(
       'terms & conditions',
-      style: TextStyle(color: Color(0xff64c3bf), fontSize: 12),
+      style: TextStyle(color: const Color(0xff64c3bf), fontSize: 10.sp),
     ),
   );
 }

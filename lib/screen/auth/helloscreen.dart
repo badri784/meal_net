@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:meal/screen/auth/loginscreen.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:meal/screen/auth/welcomescreen.dart';
 
 class Helloscreen extends StatelessWidget {
@@ -7,6 +7,9 @@ class Helloscreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final width = MediaQuery.of(context).size.width;
+    final height = MediaQuery.of(context).size.height;
+    bool isTablet = width > 600;
     return Scaffold(
       backgroundColor: Colors.white,
       body: Stack(
@@ -16,6 +19,7 @@ class Helloscreen extends StatelessWidget {
             child: Image.asset(
               'assets/image/Rectangle1.png',
               width: double.infinity,
+              height: isTablet ? height * 0.85 : height,
               fit: BoxFit.cover,
             ),
           ),
@@ -24,7 +28,7 @@ class Helloscreen extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Image.asset('assets/image/hello.png'),
-                const SizedBox(height: 50),
+                SizedBox(height: 50.h),
                 ElevatedButton(
                   onPressed: () {
                     Navigator.of(context).pushReplacement(
@@ -33,17 +37,20 @@ class Helloscreen extends StatelessWidget {
                   },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.white,
-                    padding: const EdgeInsets.symmetric(
-                      vertical: 8,
-                      horizontal: 90,
+                    padding: EdgeInsets.symmetric(
+                      vertical: 8.h,
+                      horizontal: 90.w,
                     ),
                     shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(13),
+                      borderRadius: BorderRadius.circular(13.r),
                     ),
                   ),
-                  child: const Text(
+                  child: Text(
                     'Continue',
-                    style: TextStyle(color: Color(0xff64C3BF), fontSize: 20),
+                    style: TextStyle(
+                      color: const Color(0xff64C3BF),
+                      fontSize: 20.sp,
+                    ),
                   ),
                 ),
               ],
