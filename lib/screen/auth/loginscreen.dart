@@ -4,6 +4,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:meal/screen/auth/signupscreen.dart';
+import 'package:meal/screen/home.dart';
 
 class LogInScreen extends StatefulWidget {
   const LogInScreen({super.key});
@@ -22,6 +23,7 @@ class _LogInScreenState extends State<LogInScreen> {
     passWordController.dispose();
   }
 
+  bool heien = true;
   @override
   Widget build(BuildContext context) {
     final GlobalKey<FormState> key = GlobalKey<FormState>();
@@ -31,10 +33,21 @@ class _LogInScreenState extends State<LogInScreen> {
         final firebaseauth = FirebaseAuth.instance;
         final valied = key.currentState!.validate();
         if (!valied) return;
-        firebaseauth.signInWithEmailAndPassword(
-          email: emailController.text,
-          password: passWordController.text,
-        );
+        final UserCredential user = await firebaseauth
+            .signInWithEmailAndPassword(
+              email: emailController.text,
+              password: passWordController.text,
+            );
+
+        if (user.user != null) {
+          ScaffoldMessenger.of(context).clearSnackBars();
+          ScaffoldMessenger.of(
+            context,
+          ).showSnackBar(const SnackBar(content: Text('Log In succssesfly')));
+        }
+        Navigator.of(
+          context,
+        ).pushReplacement(MaterialPageRoute(builder: (_) => const Home()));
       } on FirebaseAuthException catch (e) {
         log(e.code);
       }
@@ -84,7 +97,7 @@ class _LogInScreenState extends State<LogInScreen> {
                         validator: (emailaddress) {
                           if (emailaddress == null ||
                               emailaddress.toString().trim().isEmpty ||
-                              emailaddress.contains('@')) {
+                              !emailaddress.contains('@')) {
                             return 'Invalid email address';
                           }
                           return null;
@@ -105,17 +118,27 @@ class _LogInScreenState extends State<LogInScreen> {
                         onSaved: (String? value) {
                           emailController.text = value!;
                         },
-                        validator: (emailaddress) {
-                          if (emailaddress == null ||
-                              emailaddress.toString().trim().isEmpty ||
-                              emailaddress.contains('@')) {
+                        validator: (password) {
+                          if (password == null ||
+                              password.toString().trim().isEmpty) {
                             return 'Invalid email address';
                           }
                           return null;
                         },
                         controller: passWordController,
+                        obscureText: heien,
                         keyboardType: TextInputType.multiline,
                         decoration: InputDecoration(
+                          suffixIcon: IconButton(
+                            onPressed: () {
+                              setState(() {
+                                heien != heien;
+                              });
+                            },
+                            icon: heien
+                                ? const Icon(Icons.visibility)
+                                : const Icon(Icons.visibility_off),
+                          ),
                           prefixIcon: const Icon(Icons.password),
                           labelText: 'password: ',
                           border: OutlineInputBorder(

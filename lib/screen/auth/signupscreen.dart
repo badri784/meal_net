@@ -53,6 +53,14 @@ class _SignUpScreenState extends State<SignUpScreen> {
         }
       } on FirebaseAuthException catch (e) {
         log(e.code);
+        if (e.code == 'invalid-email') {
+          ScaffoldMessenger.of(context).clearSnackBars();
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text('invalid email please try another one'),
+            ),
+          );
+        }
         if (e.code == 'email-already-in-use') {
           ScaffoldMessenger.of(context).showSnackBar(
             const SnackBar(content: Text('email is already in Just sign in')),
@@ -87,6 +95,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
                     TextFormField(
+                      textCapitalization: TextCapitalization.words,
+                      enableSuggestions: true,
                       onSaved: (newValue) {
                         userNameController.text = newValue!;
                       },

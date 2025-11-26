@@ -19,7 +19,7 @@ class Helloscreen extends StatelessWidget {
             child: Image.asset(
               'assets/image/Rectangle1.png',
               width: double.infinity,
-              height: isTablet ? height * 0.85 : height,
+              height: isTablet ? height * 0.75 : height,
               fit: BoxFit.cover,
             ),
           ),
