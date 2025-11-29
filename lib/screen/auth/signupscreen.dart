@@ -101,7 +101,9 @@ class _SignUpScreenState extends State<SignUpScreen> {
                         userNameController.text = newValue!;
                       },
                       validator: (value) {
-                        if (value!.isEmpty || value.length < 3) {
+                        if (value!.isEmpty ||
+                            value.length < 3 ||
+                            value.length > 50) {
                           return 'Please Enter valied UserName';
                         }
                         return null;
